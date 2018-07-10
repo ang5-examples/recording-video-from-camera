@@ -8,43 +8,27 @@ import {VideoRecorderService} from './video-recorder.service';
 })
 export class AppComponent implements OnInit {
   @ViewChild('videoCtrl') videoCtrl: ElementRef;
-  @ViewChild('img') img: ElementRef;
+  @ViewChild('videoCtrlResult') videoCtrlResult: ElementRef;
+  isRecording = false;
 
   constructor(private videoRecorderService: VideoRecorderService) {}
 
   ngOnInit() {
-    navigator.getUserMedia = (navigator.getUserMedia ||
-      navigator['mozGetUserMedia'] ||
-      navigator['msGetUserMedia'] ||
-      navigator['webkitGetUserMedia']);
+    this.videoRecorderService.init(this.videoCtrl.nativeElement)
+      .subscribe(() => {}, (err) => { alert(err); });
 
-    if (!navigator.getUserMedia) {
-      alert('Браузер не поддерживает getUserMedia');
-    }
-
-    const success = (stream) => {
-      this.videoCtrl.nativeElement.srcObject = stream;
-    };
-
-    const error = (err) => {
-      console.log('error: ' + err);
-      alert('getUserMedia error: ' + err);
-    };
-
-    const constraints = {audio: false, video: true};
-    navigator.getUserMedia(constraints, success, error);
+    this.videoRecorderService.videoData$.subscribe((videoBlob: Blob) => {
+      this.videoCtrlResult.nativeElement.src = URL.createObjectURL(videoBlob);
+    });
   }
 
-  snapshot() {
-    this.img.nativeElement.src = this.capture(this.videoCtrl.nativeElement).toDataURL();
+  startRecord() {
+    this.videoRecorderService.startRecord();
+    this.isRecording = true;
   }
 
-  private capture(video) {
-    const canvas = document.createElement('canvas');
-    canvas.width  = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    return canvas;
+  stopRecord() {
+    this.videoRecorderService.stopRecord();
+    this.isRecording = false;
   }
 }

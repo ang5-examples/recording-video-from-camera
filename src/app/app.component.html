@@ -1,14 +1,18 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
 
-  <video #videoCtrl autoplay playsinline controls></video>
+  <video #videoCtrl autoplay playsinline controls width="320"></video>
 
 </div>
 
 <div>
-  <button (click)="snapshot()">Snapshot</button>
+  <button (click)="startRecord()">Start Record</button>
+
+  <button (click)="stopRecord()">Stop Record</button>
+
+  <span style="color: red;" *ngIf="isRecording">record</span>
 </div>
 
 <div>
-  <img #img src="">
+  <video #videoCtrlResult autoplay playsinline controls width="320"></video>
 </div>
