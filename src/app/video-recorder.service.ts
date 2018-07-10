@@ -36,7 +36,7 @@ export class VideoRecorderService {
         observer.complete();
       };
 
-      const constraints = {audio: false, video: true};
+      const constraints = {audio: true, video: true};
       navigator.getUserMedia(constraints, success, error);
     });
   }

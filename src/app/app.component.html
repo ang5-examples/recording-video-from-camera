@@ -5,14 +5,16 @@
 
 </div>
 
-<div>
-  <button (click)="startRecord()">Start Record</button>
+<div *ngIf="isInitialized">
 
-  <button (click)="stopRecord()">Stop Record</button>
+  <button (click)="startRecord()" [disabled]="isRecording">Start Record</button>
+  <button (click)="stopRecord()" [disabled]="!isRecording">Stop Record</button>
 
   <span style="color: red;" *ngIf="isRecording">record</span>
+
+  <div>
+    <video #videoCtrlResult autoplay playsinline controls width="320"></video>
+  </div>
 </div>
 
-<div>
-  <video #videoCtrlResult autoplay playsinline controls width="320"></video>
-</div>
+
